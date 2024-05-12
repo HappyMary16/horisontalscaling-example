@@ -1,0 +1,50 @@
+﻿<html lang="uk">
+<head>
+    <title>Search for cat</title>
+</head>
+
+<body>
+<a href="index.html">Головне меню</a>
+<div id="info-text"></div>
+<div id="found-cat-name"></div>
+<div id="found-cat-behaviour"></div>
+
+<label>
+    Імʼя кота:
+    <input id="cat-name" type="text"/>
+</label>
+<button onclick="searchCat()">submit</button>
+</body>
+
+
+<script>
+    function searchCat() {
+        const catName = document.getElementById("cat-name").value;
+        fetch("http://localhost:8088/cats/" + catName)
+            .then(response => response.json())
+            .then(data => processCatFound(data))
+            .catch(function (err) {
+                console.log('Fetch Error :-S', err);
+            });
+    }
+
+    function processCatFound(cat) {
+        const text = document.getElementById("info-text");
+        const catName = document.getElementById("found-cat-name");
+        const catBehaviour = document.getElementById("found-cat-behaviour");
+
+        if (cat.error) {
+            text.innerHTML = "Кота не знайдено";
+            catName.innerHTML = "Імʼя: " + document.getElementById("cat-name").value;
+            catBehaviour.innerHTML = "";
+            return;
+        }
+
+        text.innerHTML = "Кота знайдено:";
+        catName.innerHTML = "Імʼя: " + cat.name;
+        catBehaviour.innerHTML = "Поведінка: " + cat.behaviour;
+    }
+</script>
+</html>
+
+

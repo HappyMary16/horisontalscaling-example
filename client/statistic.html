@@ -1,0 +1,40 @@
+﻿<html lang="uk">
+<head>
+    <title>Статистика</title>
+    <link href="styles/common.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+<a href="index.html">Головне меню</a>
+
+<table id="myTable" class="table table-borderless table-striped table-earning">
+    <thead>
+    <tr>
+        <th>Назва кафе</th>
+        <th>Кількість котів</th>
+    </tr>
+    </thead>
+    <tbody id="statistic"></tbody>
+</table>
+</body>
+
+<script>
+    fetch("http://localhost:8088/statistics")
+        .then(response => response.json())
+        .then(data => loadTableData(data))
+        .catch(function (err) {
+            console.log('Fetch Error :-S', err);
+        });
+
+    function loadTableData(items) {
+        const table = document.getElementById("statistic");
+        items.forEach( item => {
+            let row = table.insertRow();
+            let date = row.insertCell(0);
+            date.innerHTML = item.catsCafeName;
+            let name = row.insertCell(1);
+            name.innerHTML = item.currentCatsCount;
+        });
+    }
+</script>
+</html>

@@ -1,0 +1,61 @@
+﻿<html lang="uk">
+<head>
+    <title>Add a cat</title>
+</head>
+<body>
+<a href="index.html">Головне меню</a>
+<div id="success-message"></div>
+
+<form onsubmit="saveCat(event)">
+    <label id="name">
+        Name:
+        <input type="text"/>
+    </label>
+
+    <label id="behaviour">
+        Behaviour:
+        <select>
+            <option value="CALM">Calm</option>
+            <option value="CRAZY">Crazy</option>
+            <option value="NORMAL">Normal</option>
+        </select>
+    </label>
+    <input type="submit" value="submit"/>
+</form>
+</body>
+
+<script>
+
+    function saveCat(e) {
+        e.preventDefault();
+        const options = {
+            method: 'POST',
+            headers: {
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                "name": e.target[0].value,
+                "behaviour": e.target[1].value
+            })
+        };
+
+        fetch("http://localhost:8088/cats", options)
+            .then(response => response.json())
+            .then((cat) => processCatCreation(cat))
+            .catch(function (err) {
+                console.log('Fetch Error :-S', err);
+            });
+    }
+
+    function processCatCreation(cat) {
+        const text = document.getElementById("success-message");
+
+        if (cat.error) {
+            text.innerHTML = "Кота не додано";
+            return;
+        }
+
+        text.innerHTML = "Кота з іменем " + cat.name + " додано";
+    }
+</script>
+</html>
