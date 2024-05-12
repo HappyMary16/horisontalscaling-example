@@ -1,4 +1,12 @@
 services:
+
+  client:
+    image: nginx:1.25.4
+    volumes:
+      - ../client:/usr/share/nginx/html:ro
+    ports:
+      - "8080:80"
+
   api-service:
     build:
       context: ../
@@ -8,6 +16,7 @@ services:
       STATISTIC_SERVICE_URL: "statistic-service:8085"
     ports:
       - "8088:8088"
+
   cat-service:
     build:
       context: ../
@@ -16,6 +25,7 @@ services:
       CATS_CAFE_NAME: "Котяче кафе"
     ports:
       - "8090:8090"
+
   statistic-service:
     build:
       context: ../
@@ -29,12 +39,7 @@ services:
     depends_on:
       db:
         condition: service_healthy
-  client:
-    image: nginx:1.25.4
-    volumes:
-      - ../client:/usr/share/nginx/html:ro
-    ports:
-      - "8080:80"
+
   db:
     image: postgres:15.2
     environment:
